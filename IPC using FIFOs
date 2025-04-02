@@ -1,0 +1,50 @@
+Writer Process
+
+#include <iostream>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <cstring>
+
+using namespace std;
+
+#define FIFO_NAME "/tmp/myfifo"
+
+int main() {
+    mkfifo(FIFO_NAME, 0666);
+    int fd = open(FIFO_NAME, O_WRONLY);
+
+    const char* message = "Hello from FIFO Writer!";
+    write(fd, message, strlen(message) + 1);
+    
+    close(fd);
+    return 0;
+}
+Reader Process
+
+#include <iostream>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+using namespace std;
+
+#define FIFO_NAME "/tmp/myfifo"
+
+int main() {
+    char buffer[100];
+    int fd = open(FIFO_NAME, O_RDONLY);
+    
+    read(fd, buffer, sizeof(buffer));
+    cout << "Reader received: " << buffer << endl;
+
+    close(fd);
+    return 0;
+}
+
+
+
+
+
+
+
